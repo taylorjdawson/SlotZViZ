@@ -1,25 +1,19 @@
-import React, { useState } from "react";
+"use client";
 
-interface SlotComponentProps {
-  slot: string;
+import Link from "next/link";
+
+interface SlotHeaderProps {
+  slot: number;
 }
 
-const SlotComponent: React.FC<SlotComponentProps> = (props) => {
-  const [slot, setSlot] = useState<number>(parseInt(props.slot));
-
+const SlotHeader = ({ slot }: SlotHeaderProps) => {
   return (
-    <div className="flex justify-center items-center space-x-4">
-      <button className="opacity-60" onClick={() => setSlot(slot - 1)}>
-        {slot - 1}
-      </button>
-
+    <div className="flex w-full items-center space-x-10 justify-center">
+      <Link className="opacity-50" href={`/slot/${slot - 1}`}>{slot - 1}</Link>
       <div className="text-center font-bold">{slot}</div>
-
-      <button className="opacity-60" onClick={() => setSlot(slot + 1)}>
-        {slot + 1}
-      </button>
+      <Link className="opacity-50" href={`/slot/${slot + 1}`}>{slot + 1}</Link>
     </div>
   );
 };
 
-export default SlotComponent;
+export default SlotHeader;
