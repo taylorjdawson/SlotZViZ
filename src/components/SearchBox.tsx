@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, KeyboardEvent, useEffect } from "react";
 
 interface SearchBoxProps {
@@ -9,17 +11,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({ callback }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const handler = (event) => {
+    const handler = (event: globalThis.KeyboardEvent) => {
       if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
         setIsVisible(true);
       }
     };
 
-    window.addEventListener("keydown", (event) => {
-      if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
-        setIsVisible(true);
-      }
-    });
+    window.addEventListener("keydown", handler);
 
     return () => {
       window.removeEventListener("keydown", handler);

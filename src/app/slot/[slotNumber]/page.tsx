@@ -1,39 +1,30 @@
-import ScatterPlotChart from "@/components/ScatterPlotChart";
-import SlotHeader from "@/components/SlotHeader";
+import SearchBox from "@/components/SearchBox";
+import Slots from "@/components/Slots";
+import { Bids } from "@/lib/types";
+
 import { getBlockBids } from "@/lib/utils";
-
-import type { Metadata } from "next";
-import { Suspense } from "react";
-
-// export async function generateMetadata({
-//   params,
-// }: {
-//   params: { slotNumber: string };
-// }): Promise<Metadata> {
-//   console.log(params);
-//   const title = `❑ ${params.slotNumber} | SlotZ ViZ`;
-//   return {
-//     title,
-//     openGraph: {
-//       type: "website",
-//       url: "https://example.com",
-//       title,
-//       description: "ViZ this slot yo",
-//       siteName: "SlotZ ViZ",
-//       images: [
-//         {
-//           url: "https://example.com/og.png",
-//         },
-//       ],
-//     },
-//   };
-// }
 
 export default async function Slot({
   params: { slotNumber },
+  searchParams: { slots },
 }: {
   params: { slotNumber: string };
+  searchParams: { slots: string };
 }) {
-  const bids = slotNumber ? await getBlockBids(slotNumber) : [];
-  return <ScatterPlotChart data={bids} />;
+  const allSlots = [slotNumber, ...(slots ? slots?.split(",") : [])];
+  
+  const bids: Bids = await allSlots.reduce(async (promiseAcc, slot) => {
+    const acc = await promiseAcc;
+    const bids = await getBlockBids(slot);
+    return { ...acc, [slot]: bids };
+  }, Promise.resolve({}));
+
+  return (
+    <>
+      <div className=" flex h-full w-full">
+        <Slots slots={allSlots} bids={bids} />
+      </div>
+      <SearchBox />
+    </>
+  );
 }

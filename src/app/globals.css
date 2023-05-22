@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .glow {
+    @apply text-white;
+    @apply shadow-glow;
+  }
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -11,19 +18,19 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-start-rgb: 7, 1, 20;
+    --background-end-rgb: 10, 254, 151;
   }
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
+  /* background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
-    rgb(var(--background-start-rgb));
+    rgb(var(--background-start-rgb)); */
 }
 
 @keyframes fade {
@@ -36,4 +43,27 @@ body {
 }
 .animate-fade {
   animation: fade 2s linear infinite;
+}
+
+.tooltip {
+  display: flex;
+  width: 50px;
+  height: 20px;
+  background: white;
+  border-radius: 8px;
+  visibility: hidden;
+}
+
+.tooltip:hover {
+}
+
+.scatter-point {
+}
+
+.scatter-point:hover + .tooltip {
+  visibility: visible;
+}
+
+.scatter-point-group:hover .scatter-point-tooltip {
+  visibility: visible;
 }

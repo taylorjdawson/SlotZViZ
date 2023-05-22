@@ -1,7 +1,4 @@
-"use client";
-
 import SearchBox from "@/components/SearchBox";
-import SlotHeader from "@/components/SlotHeader";
 
 export default function DashboardLayout({
   children,
@@ -11,8 +8,7 @@ export default function DashboardLayout({
   params: { slotNumber: string };
 }) {
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <SlotHeader slot={parseInt(slotNumber)} />
+    <main className="flex flex-col h-screen items-center p-16 xl:p-20">
       {children}
       <SearchBox />
     </main>

@@ -13,3 +13,16 @@ export interface BlockBid {
   timestamp: string;
   timestamp_ms: string;
 }
+
+export interface Bid {
+  relay: string;
+  builderPubKey: string;
+  builderLabel: string;
+  timestamp: string;
+  value: string;
+}
+
+export type Bids = {
+  [key: string]: Bid[];
+};
+
