@@ -1,16 +1,16 @@
-import ScatterPlotChartServer from "@/components/ScatterPlotChartServer";
-import { getBlockBids } from "@/lib/utils";
-import { ImageResponse } from "next/server";
+import ScatterPlotChartServer from "@/components/ScatterPlotChartServer"
+import { getBlockBids } from "@/lib/utils"
+import { ImageResponse } from "next/server"
 
-export const runtime = "edge";
-export const contentType = "image/png";
+export const runtime = "edge"
+export const contentType = "image/png"
 
 export default async function OG({
   params: { slotNumber },
 }: {
-  params: { slotNumber: string };
+  params: { slotNumber: string }
 }) {
-  const bids = await getBlockBids(slotNumber);
+  const bids = await getBlockBids(slotNumber)
   return new ImageResponse(
     (
       // Modified based on https://tailwindui.com/components/marketing/sections/cta-sections
@@ -35,7 +35,7 @@ export default async function OG({
       width: 1200,
       height: 630,
     }
-  );
+  )
 }
 
 // import { ImageResponse } from "next/server";

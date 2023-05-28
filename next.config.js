@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: { esmExternals: 'loose' },
+  experimental: { esmExternals: 'loose',  serverActions: true, },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {

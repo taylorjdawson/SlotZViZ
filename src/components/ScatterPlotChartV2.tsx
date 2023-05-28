@@ -1,59 +1,73 @@
-"use client";
+"use client"
 
-import { Bid } from "@/lib/types";
-import * as d3 from "d3";
-import { CSSProperties, useState } from "react";
-import { formatEther } from "viem";
-import { motion, AnimatePresence } from "framer-motion";
-import { colorHash } from "@/lib/utils";
-import { BUILDER_PUBKEY_IDS } from "@/lib/constants";
+import { Bid, GroupBy } from "@/lib/types"
+import * as d3 from "d3"
+import { CSSProperties, useState } from "react"
+import { formatEther } from "viem"
+import { motion, AnimatePresence } from "framer-motion"
+import { colorHash } from "@/lib/utils"
+import { BUILDER_PUBKEY_IDS } from "@/lib/constants"
 
 interface BidsScatterPlotProps {
-  data: Bid[];
-  selectedBuilders: Set<string>;
+  data: Bid[]
+  selectedBuilders: Set<string>
+  groupBy: GroupBy
 }
 
 const formatTime = (time: number, millis = false) => {
-  const date = new Date(time);
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  const seconds = date.getSeconds().toString().padStart(2, "0");
-  const milliseconds = date.getMilliseconds().toString().padStart(3, "0");
-  return `${minutes}:${seconds}${millis ? `:${milliseconds}` : ""}`;
-};
+  const date = new Date(time)
+  const minutes = date.getMinutes().toString().padStart(2, "0")
+  const seconds = date.getSeconds().toString().padStart(2, "0")
+  const milliseconds = date.getMilliseconds().toString().padStart(3, "0")
+  return `${minutes}:${seconds}${millis ? `:${milliseconds}` : ""}`
+}
 
-function Chart({ data, selectedBuilders }: BidsScatterPlotProps) {
-  console.log(data);
-  data?.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
-  let bids = data?.map(({ timestamp, value, ...bidData }) => ({
-    timestamp: new Date(parseInt(timestamp)),
-    value: parseFloat(value),
-    ...bidData,
-  }));
+function Chart({ data, selectedBuilders, groupBy }: BidsScatterPlotProps) {
+  console.log({ groupBy })
+  data?.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp))
+  let bids = data?.map(
+    ({ timestamp, value, builderPubKey, builderLabel, ...bidData }) => ({
+      builderLabel,
+      builderPubKey,
+      timestamp: new Date(parseInt(timestamp)),
+      value: parseFloat(value),
+      builderColor:
+        selectedBuilders?.size > 0
+          ? selectedBuilders.has(builderPubKey)
+            ? colorHash(builderPubKey)
+            : `${colorHash(builderPubKey)}10`
+          : colorHash(builderPubKey),
+      entityColor: colorHash(builderLabel),
+      ...bidData,
+    })
+  )
 
   let xScale = d3
     .scaleTime()
     .domain([bids[0]?.timestamp, bids[bids.length - 1]?.timestamp])
-    .range([0, 100]);
+    .range([0, 100])
 
-  const maxBidValue = d3.max(bids.map((d) => d.value)) ?? 0;
+  const maxBidValue = d3.max(bids.map((d) => d.value)) ?? 0
   let yScale = d3
     .scaleLinear()
     .domain([0, maxBidValue * 1.1])
-    .range([100, 0]);
+    .range([100, 0])
 
   const [infoBox, setInfoBox] = useState<{
-    pubKey: string;
-    value: string;
-    time: string;
-    label: string;
-  } | null>();
+    pubKey: string
+    value: string
+    time: string
+    label: string
+  } | null>()
+
+  const getColor = () => {}
 
   return (
     <div
       className="@container relative h-full w-full m-5"
       style={
         {
-          "--marginTop": "6px",
+          "--marginTop": "12px",
           "--marginRight": "8px",
           "--marginBottom": "16px",
           "--marginLeft": "25px",
@@ -161,40 +175,45 @@ function Chart({ data, selectedBuilders }: BidsScatterPlotProps) {
             ))}
 
           {/* Scatter plot points */}
-          {bids.map(({ builderPubKey, timestamp, value }, i) => (
-            <g key={i}>
-              <path
-                data-pubkey={builderPubKey.substring(0, 8)}
-                key={timestamp.toString()}
-                d={`M ${xScale(timestamp)} ${yScale(value)} l 0.0001 0`}
-                vectorEffect="non-scaling-stroke"
-                strokeWidth="8"
-                strokeLinecap="round"
-                fill="#ffffff"
-                stroke={
-                  selectedBuilders?.size > 0
-                    ? selectedBuilders.has(builderPubKey)
-                      ? colorHash(builderPubKey)
-                      : `${colorHash(builderPubKey)}10`
-                    : colorHash(builderPubKey)
-                }
-                className="text-white hover:stroke-[14px] cursor-pointer transition-all duration-200 ease-in-out shadow-2xl"
-                onMouseEnter={() => {
-                  setInfoBox({
-                    label:
-                      BUILDER_PUBKEY_IDS[builderPubKey] ??
-                      builderPubKey.substring(0, 8),
-                    pubKey: builderPubKey,
-                    time: formatTime(+timestamp, true),
-                    value: formatEther(BigInt(value)),
-                  });
-                }}
-                onMouseLeave={() => {
-                  setInfoBox(null);
-                }}
-              />
-            </g>
-          ))}
+          {bids.map(
+            (
+              {
+                builderPubKey,
+                timestamp,
+                value,
+                builderLabel,
+                builderColor,
+                entityColor,
+              },
+              i
+            ) => (
+              <g key={i}>
+                <path
+                  data-pubkey={builderPubKey.substring(0, 8)}
+                  key={timestamp.toString()}
+                  d={`M ${xScale(timestamp)} ${yScale(value)} l 0.0001 0`}
+                  vectorEffect="non-scaling-stroke"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  stroke={groupBy === "entity" ? entityColor : builderColor}
+                  className="text-white hover:stroke-[14px] cursor-pointer transition-all duration-200 ease-in-out shadow-2xl"
+                  onMouseEnter={() => {
+                    setInfoBox({
+                      label:
+                        BUILDER_PUBKEY_IDS[builderPubKey] ??
+                        builderPubKey.substring(0, 8),
+                      pubKey: builderPubKey,
+                      time: formatTime(+timestamp, true),
+                      value: formatEther(BigInt(value)),
+                    })
+                  }}
+                  onMouseLeave={() => {
+                    setInfoBox(null)
+                  }}
+                />
+              </g>
+            )
+          )}
         </svg>
       </svg>
 
@@ -227,7 +246,7 @@ function Chart({ data, selectedBuilders }: BidsScatterPlotProps) {
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }
 
-export default Chart;
+export default Chart

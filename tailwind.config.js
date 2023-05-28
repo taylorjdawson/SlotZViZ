@@ -1,4 +1,4 @@
-const plugin = require("tailwindcss/plugin");
+const plugin = require("tailwindcss/plugin")
 const textGlowPlugin = plugin(function ({ matchUtilities, theme }) {
   matchUtilities(
     {
@@ -7,8 +7,8 @@ const textGlowPlugin = plugin(function ({ matchUtilities, theme }) {
       }),
     },
     { values: theme("textShadow") }
-  );
-});
+  )
+})
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -19,6 +19,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        glow: "0 0 10px 2px #F80B52, 0 4px 80px rgb(255 73 128 / 60%), inset 0 0 10px 2px #F80B52, inset 0 4px 40px rgb(255 73 128 / 60%)",
+        "glow-yella":
+          "0 0 10px 2px #B1FF0C, 0 4px 80px #b1ff0c99, inset 0 0 10px 2px #B1FF0C, inset 0 4px 40px #b1ff0c99",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -35,7 +40,19 @@ module.exports = {
         DEFAULT: "0 0px 8px var(--tw-shadow-color)",
         lg: "0 0px 16px var(--tw-shadow-color)",
       },
+      keyframes: {
+        "rotate-bounce": {
+          "0%": { transform: "rotate(0deg) translateY(0px)" },
+          "25%": { transform: "rotate(45deg) translateY(0px)" },
+          "50%": { transform: "rotate(90deg) translateY(-20px)" },
+          "75%": { transform: "rotate(135deg) translateY(0px)" },
+          "100%": { transform: "rotate(180deg) translateY(0px)" },
+        },
+      },
+      animation: {
+        "rotate-bounce": "rotate-bounce 2s infinite",
+      },
     },
   },
   plugins: [require("daisyui"), textGlowPlugin],
-};
+}

@@ -1,16 +1,16 @@
-import Link from "next/link";
+import Link from "next/link"
 
 interface SlotHeaderProps {
-  slot: number;
-  slots: string[];
-  index: number;
+  slot: number
+  slots: string[]
+  index: number
 }
 
 const SlotHeader = ({ slot, slots, index }: SlotHeaderProps) => {
   const prevSlot =
-    index === 0 ? `/slot/${slot - 1}` : `/slot/${slots[0]}?slots=${slot - 1}`;
+    index === 0 ? `/slot/${slot - 1}` : `/slot/${slots[0]}?slots=${slot - 1}`
   const nextSlot =
-    index === 0 ? `/slot/${slot + 1}` : `/slot/${slots[0]}?slots=${slot + 1}`;
+    index === 0 ? `/slot/${slot + 1}` : `/slot/${slots[0]}?slots=${slot + 1}`
   return (
     <>
       <div className="flex w-full items-center space-x-10 justify-center">
@@ -30,7 +30,7 @@ const SlotHeader = ({ slot, slots, index }: SlotHeaderProps) => {
         ""
       )} */}
     </>
-  );
-};
+  )
+}
 
-export default SlotHeader;
+export default SlotHeader

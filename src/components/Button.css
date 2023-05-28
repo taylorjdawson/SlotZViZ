@@ -21,7 +21,7 @@
   animation: shimmer 2s infinite;
 } */
 
-button:hover:before {
+/* button:hover:before {
   content: '';
   position: absolute;
   width: 100px;
@@ -41,4 +41,5 @@ button:hover:before {
   0% {left: -100px}
   20% {left: 100%}
   100% {left: 100%}
-}
+} */
+

@@ -182,3 +182,9 @@ export const BUILDER_PUBKEY_IDS: Record<string, string> = {
   "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224":
     "icanhazblock",
 };
+
+export const TABLE = {
+  USERS: "users",
+};
+
+export const AUTH_SIGN_MESSAGE_PREFIX = 'With reverence, as a vigilant Observer of the Sacred Slots, I inscribe my vow,  a pledge etched in the immutable ledger of time, an unbroken thread in the vast tapestry of transhuman existence...'

@@ -1,9 +1,10 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+"use client"
+
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 export default function Home() {
-  const router = useRouter();
+  const router = useRouter()
   useEffect(() => {
     const func = async () => {
       const slot = await fetch(
@@ -12,18 +13,18 @@ export default function Home() {
         .then((res) => res.json())
         .then(({ data }) => data[0].header.message.slot)
         .catch((error) => {
-          console.error("Error:", error);
-        });
+          console.error("Error:", error)
+        })
       if (slot) {
-        router.push(`/slot/${slot}`);
+        router.push(`/slot/${slot}`)
       }
-    };
-    func();
-  }, [router]);
+    }
+    func()
+  }, [router])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-6">
       SlotZ ViZ
     </main>
-  );
+  )
 }
