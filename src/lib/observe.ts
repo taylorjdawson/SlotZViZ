@@ -31,6 +31,7 @@ async function toggleObserver(address: string, slot: string) {
   }
   // If the row does not exist, insert it
   else {
+    console.log("inserting...")
     let { error } = await supabase.from("observers").insert([{ address, slot }])
 
     if (error) {
@@ -83,15 +84,15 @@ export const observe = async (address: string, slot: string) => {
 }
 
 export const getObservers = async (slots: string[]): Promise<number> => {
+  console.log("trying to observe slot", slots[0])
   let { data, error } = await supabase
     .from("observers_per_slot")
     .select("*")
     .in("slot", slots)
+
   if (error) {
-    console.log("Error: ", error)
-  } else {
-    console.log("Data: ", data)
-  } //{ slot: 6517734, total_observers: 1 }
+    console.error("Error: ", error)
+  }
   return data && !error ? data[0]?.total_observers ?? 0 : 0
 }
 

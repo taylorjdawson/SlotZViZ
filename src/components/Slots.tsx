@@ -63,15 +63,13 @@ const Slots = ({ slots }: SlotsProps) => {
   useEffect(() => {
     const checkObservations = async (address: string) => {
       const observesSlot = await isObserver(address, selectedChart.id)
-      console.log({ observesSlot })
+
       if (observesSlot !== null) {
-        console.log("setObserving...", observesSlot)
         setObserving(observesSlot)
       }
     }
 
     if (state.user && wallet?.accounts[0].address) {
-      console.log("LOGGIED INNN")
       enableObserveButton(true)
       checkObservations(wallet?.accounts[0].address)
     }
@@ -94,7 +92,6 @@ const Slots = ({ slots }: SlotsProps) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (event.target.value) {
-      console.log("stetting state", event.target.value)
       setState({ ...state, groupBy: event.target.value as GroupBy })
     }
   }
@@ -155,7 +152,6 @@ const Slots = ({ slots }: SlotsProps) => {
                       wallet?.accounts[0].address ?? "",
                       selectedChart.id
                     ).then((res) => {
-                      console.log(observing)
                       setSelectedChart({
                         ...selectedChart,
                         observers:

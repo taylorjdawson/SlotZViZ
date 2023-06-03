@@ -1,6 +1,6 @@
 "use client"
 
-import { ButtonHTMLAttributes, ReactNode, useEffect, useState } from "react"
+import { ButtonHTMLAttributes, useEffect, useState } from "react"
 import { useConnectWallet } from "@web3-onboard/react"
 import { v4 as uuid } from "uuid"
 import { WalletClient, createWalletClient, custom } from "viem"
@@ -10,7 +10,6 @@ import { login } from "@/lib/login"
 
 import supabase from "@/lib/supabaseClient"
 import useAppState from "@/lib/hooks/useAppState"
-import { useRouter } from "next/router"
 
 interface ButtonState {
   text: string
@@ -125,16 +124,21 @@ const ConnectButton: React.FC<ButtonHTMLAttributes<HTMLButtonElement>> = ({
         className={`${buttonState.className} border absolute top-12 right-12  border-opacity-70 rounded   transition-all px-4 py-1`}
         disabled={connecting}
         onClick={async () => {
-          if (wallet?.provider && account && walletClient && buttonState.text === "assimilate") {
-            const { message } = await genNonce(account.address as `0x{string}`)
+          if (
+            wallet?.provider &&
+            account &&
+            walletClient &&
+            buttonState.text === "assimilate"
+          ) {
+            const [address] = await walletClient.getAddresses()
+            const { message, nonce } = await genNonce(address)
 
-            const [acct] = await walletClient.getAddresses()
             const signature = await walletClient.signMessage({
-              account: acct,
+              account: address,
               message,
             })
 
-            const token = await login({ signedMsg: signature, address: acct })
+            const token = await login({ signedMsg: signature, address, nonce })
 
             const session = {
               access_token: token,
@@ -147,7 +151,7 @@ const ConnectButton: React.FC<ButtonHTMLAttributes<HTMLButtonElement>> = ({
             if (result.user) {
               setState({ ...state, user: result.user })
             }
-            console.log({ result, error })
+
           } else if (buttonState.text === "disassimilate") {
             handleSignOut()
           } else {

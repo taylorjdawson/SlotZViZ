@@ -6,11 +6,7 @@ import type { NextRequest } from "next/server"
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get("code")
-  console.log(
-    "======.....>>> werid code callback fucntion code",
-    code,
-    requestUrl
-  )
+
   if (code) {
     const supabase = createRouteHandlerClient({ cookies })
     await supabase.auth.exchangeCodeForSession(code)

@@ -23,7 +23,7 @@ const formatTime = (time: number, millis = false) => {
 }
 
 function Chart({ data, selectedBuilders, groupBy }: BidsScatterPlotProps) {
-  console.log({ groupBy })
+
   data?.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp))
   let bids = data?.map(
     ({ timestamp, value, builderPubKey, builderLabel, ...bidData }) => ({
